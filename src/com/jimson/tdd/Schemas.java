@@ -1,24 +1,31 @@
 package com.jimson.tdd;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class Schemas {
-    private Map<String, Object> schemas;
+class Schemas {
+    private List<SchemaItem> schemas;
 
-    public Schemas(String config) {
-        schemas = new HashMap<>();
+    Schemas(String config) {
+        schemas = new ArrayList<>();
         Arrays.stream(config.split(",")).forEach(schema -> {
-            String[] items = schema.split(":");
-            schemas.put(items[0], items[1]);
+            schemas.add(new SchemaItem(schema));
         });
     }
 
-    public Object getValue(String key, String value) {
-        if (schemas.get(key).equals("bool"))
-            return value.equalsIgnoreCase("true");
-        if (schemas.get(key).equals("int"))
+    Object getValue(String key, String value) {
+        SchemaItem item = schemas.stream().filter(schema -> key.equalsIgnoreCase(schema.getName())).findFirst().orElse(null);
+        return getSchemaValue(value, item);
+    }
+
+    private Object getSchemaValue(String value, SchemaItem item) {
+        if (item == null) {
+            return value;
+        }
+        if (item.getValue().equalsIgnoreCase("bool"))
+            return "true".equalsIgnoreCase(value    );
+        if (item.getValue().equals("int"))
             return Integer.valueOf(value);
         return value;
     }
