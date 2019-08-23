@@ -23,8 +23,12 @@ class Schemas {
         if (item == null) {
             return value;
         }
+        return getTypeValue(value, item);
+    }
+
+    private Object getTypeValue(String value, SchemaItem item) {
         if (item.getValue().equalsIgnoreCase("bool"))
-            return "true".equalsIgnoreCase(value    );
+            return "true".equalsIgnoreCase(value);
         if (item.getValue().equals("int"))
             return Integer.valueOf(value);
         return value;
