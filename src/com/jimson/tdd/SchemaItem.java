@@ -1,10 +1,15 @@
 package com.jimson.tdd;
 
-class SchemaItem extends ArgItem{
+class SchemaItem extends ArgItem {
     private String description;
+
     SchemaItem(String schemaString) {
-        super(schemaString, ":");
+        super(getSplit(schemaString)[0], getSplit(schemaString).length > 1 ? getSplit(schemaString)[1] : null);
         this.description = schemaString;
+    }
+
+    private static String[] getSplit(String schemaString) {
+        return schemaString.split(":");
     }
 
     String getDescription() {

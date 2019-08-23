@@ -8,9 +8,24 @@ class Command {
 
     Command(String commandLine) {
         commands = new ArrayList<>();
-        Arrays.stream(commandLine.split("-")).filter(a -> !a.isEmpty()).forEach(cmd -> {
-            commands.add(new CommandItem(cmd));
-        });
+
+        ListIterator<String> iterator = Arrays.asList(commandLine.split("\\s")).listIterator();
+        while (iterator.hasNext()) {
+            String name = iterator.next();
+            if(iterator.hasNext()) {
+                String value = iterator.next();
+                if (isCommandName(value)) {
+                    commands.add(new CommandItem(name.replace("-", ""), null));
+                    iterator.previous();
+                } else {
+                    commands.add(new CommandItem(name.replace("-", ""), value));
+                }
+            }
+        }
+    }
+
+    private boolean isCommandName(String value) {
+        return value.matches("-[a-zA-Z]");
     }
 
     String getValue(String key) {
